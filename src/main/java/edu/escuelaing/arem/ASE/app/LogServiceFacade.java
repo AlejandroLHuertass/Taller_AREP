@@ -1,20 +1,29 @@
 package edu.escuelaing.arem.ASE.app;
 
-import java.rmi.server.RemoteServer;
-
-import static spark.Spark.staticFiles;
-import static spark.Spark.get;
+import static spark.Spark.*;
 
 public class LogServiceFacade {
-    public static void main(String[] args) {
+    private static final String[] LOG_SERVICE_URL = { "http://log_service_rr1:37000/logservice",
+            "http://log_service_rr2:38000/logservice", "http://log_service_rr3:39000/logservice" };
 
-        //RemoteLogServerInvoke remoteLogServerInvoke = new RemoteLogServerInvoke(); // Crear una instancia de RemoteLogServerInvoke
+    public static void main(String[] args) {
+        port(get_current_port());
         // root is 'src/main/resources', so put files in 'src/main/resources/public'
-        staticFiles.location("/public"); // Static files
+        staticFileLocation("/public");
+
+        RemoteLogServerInvoke remoteLogServerInvoke = new RemoteLogServerInvoke(LOG_SERVICE_URL);
 
         get("/logservicefacade", (req, res) -> {
             res.type("application/json");
-            return "{\"login1\":\"20-2-2024-log initial\"}";
+            return remoteLogServerInvoke.invoke(req.queryParams("msg"));
         });
     }
+
+    private static int get_current_port() {
+        if (System.getenv("PORT") != null) {
+            return Integer.parseInt(System.getenv("PORT"));
+        }
+        return 4567;
+    }
+
 }

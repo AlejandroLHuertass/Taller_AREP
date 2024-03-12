@@ -1,23 +1,37 @@
 package edu.escuelaing.arem.ASE.app;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.*;
-
-
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class RemoteLogServerInvoke {
-
+    
     private static final String USER_AGENT = "Mozilla/5.0";
-    private static final String GET_URL = "";
 
-    public RemoteLogServerInvoke() {
+    private String[] get_URL = {};
+    private int selectecService = 0;
+
+    public RemoteLogServerInvoke(String[] invokeUrl) {
+        get_URL = invokeUrl;
     }
 
-    public static String invoke(String[] args) throws IOException {
+    public String invoke(String msg) throws IOException {
 
-        URL obj = new URL(GET_URL);
+        URL obj;
+        if (selectecService > 2){
+            selectecService = 0;
+        }
+
+        if(msg != null) {
+            obj = new URL(get_URL[selectecService] + "?msg=" + msg);
+            selectecService = selectecService + 1;
+        } else {
+            obj = new URL(get_URL[selectecService]);
+        }
+
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", USER_AGENT);
@@ -30,6 +44,7 @@ public class RemoteLogServerInvoke {
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     con.getInputStream()));
             String inputLine;
+
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
@@ -41,7 +56,7 @@ public class RemoteLogServerInvoke {
             System.out.println("GET request not worked");
         }
         System.out.println("GET DONE");
+
         return response.toString();
     }
-
 }

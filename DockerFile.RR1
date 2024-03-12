@@ -1,0 +1,11 @@
+# Utilizando la imagen base OpenJDK 17
+FROM openjdk:17
+# Estableciendo el directorio de trabajo dentro de la imagen
+WORKDIR /usrapp/bin
+# Configurando la variable de entorno PORT con el valor 37000
+ENV PORT 37000
+# Copiando los archivos necesarios al contenedor
+COPY /target/classes /usrapp/bin/classes
+COPY /target/dependency /usrapp/bin/dependency
+# Especificando el comando que se ejecutará al iniciar el contenedor
+CMD ["java","-cp","./classes:./dependency/*","edu.escuelaing.arem.ASE.app.LogService"]
