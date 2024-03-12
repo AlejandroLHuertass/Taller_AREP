@@ -1,7 +1,6 @@
-# Foobar
+# TALLER DE TRABAJO INDIVIDUAL EN PATRONES ARQUITECTURALES
 
-Foobar is a Python library for dealing with word pluralization.
 
-## Installation
+## autor
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+Steven Alejandro Huertas Lemus
